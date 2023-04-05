@@ -1,7 +1,7 @@
 const result = document.getElementById("result");
 
 function callAPI() {
-  fetch("https://alazea.onrender.com/")
+  fetch("https://alazea.onrender.com/plants")
     .then(response => response.json())
     .then(data => {
         console.log(data);
