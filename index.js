@@ -1,18 +1,30 @@
 const result = document.getElementById("result");
 
-function callAPI() {
-  fetch("https://glimpaxe-momento.onrender.com")
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-      result.innerHTML = data.message;
-    })
-    .catch(error => {
-      console.log(error);
-      result.innerHTML = "Error fetching data";
-    });
+async function callAPI() {
+  try {
+    const response = await fetch("https://glimpaxe-momento.onrender.com");
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const contentType = response.headers.get("content-type");
+
+    if (contentType && contentType.includes("application/json")) {
+      const data = await response.json();
+      result.innerHTML = data.message ?? JSON.stringify(data);
+    } else {
+      const text = await response.text();
+      result.innerHTML = text;
+    }
+  } catch (error) {
+    console.error(error);
+    result.innerHTML = "Error fetching data";
+  }
 }
 
-callAPI(); // Call the API initially on page load
+// Initial call on page load
+callAPI();
 
-setInterval(callAPI, 300000); 
+// Call every 30 seconds
+setInterval(callAPI, 30000);
